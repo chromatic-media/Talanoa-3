@@ -78,7 +78,7 @@ function serve() {
   // asked to carry on saving, which fetches whatever is still missing)
   for (let end = Date.now() + 300000, last = -1, since = Date.now(); ;) {   // ~9,300 clips through this small server
     const left = await page.evaluate(async () => {
-      const want = voiceUrls(), have = new Set((await (await caches.open('tt-voices')).keys()).map((r) => r.url));
+      const want = voiceUrls(), have = new Set((await (await caches.open('tt3-voices')).keys()).map((r) => r.url));
       return want.filter((u) => !have.has(u)).length;
     });
     if (left === 0) break;
@@ -141,7 +141,7 @@ function serve() {
   //    pictures" has something to show.
   await page.evaluate(() => {
     const d = (n) => dayStr(new Date(Date.now() - n * 864e5));
-    localStorage.setItem('tt_counts', JSON.stringify({ since: d(6), days: {
+    localStorage.setItem('tt3_counts', JSON.stringify({ since: d(6), days: {
       [d(0)]: { 'I want|Drink': 4, 'I feel|Happy': 3, 'core|Yes': 3, 'Maverik|Drink': 2 },
       [d(2)]: { 'I want|Drink': 3, 'I feel|Happy': 2, 'Fun|Toy Story': 3 },
       [d(5)]: { 'Maverik|Drink': 3, 'core|Yes': 2, "core|Hi, I'm Brenton": 3 } } }));
@@ -200,11 +200,11 @@ function serve() {
   await page.waitForTimeout(300);
   await page.evaluate(() => { speechSynthesis.speak = () => {}; });
   // the Time page's Dad coming?, with a visit in three days
-  await page.evaluate(() => { const d = new Date(); d.setDate(d.getDate() + 3); store('tt_visit_dad', JSON.stringify({date: dayStr(d), weekly: false})); });
+  await page.evaluate(() => { const d = new Date(); d.setDate(d.getDate() + 3); store('tt3_visit_dad', JSON.stringify({date: dayStr(d), weekly: false})); });
   await goTo('Time');
   await tap('#stage .tile', await page.evaluate(() => [...document.querySelectorAll('#stage .tile')].findIndex((t) => t._item.label === 'Dad coming?')));
   await webp(await page.screenshot(), 'card-visit.webp');
-  await page.evaluate(() => { closeCard(); store('tt_visit_dad', ''); });
+  await page.evaluate(() => { closeCard(); store('tt3_visit_dad', ''); });
   // the wait timer, with Toy Story after it
   await page.evaluate(() => { const t = LIB.pages.find((p) => p.name === 'Toy Story').tiles[0]; startTimer(5, t._key); TIMER.end = Date.now() + 4.5 * 60000; saveTimer(); drawTimer(); });
   await webp(await page.screenshot(), 'card-timer.webp');

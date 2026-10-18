@@ -2,12 +2,12 @@
    sw.js is generated from tools/sw-template.js by tools/build.py; edit the template.
 
    Everything the board needs is kept on the phone, so it keeps working with no
-   internet. Voice clips go in their own cache ("tt-voices") that survives app
+   internet. Voice clips go in their own cache ("tt3-voices") that survives app
    updates; the page fills it for whichever voice is selected. */
-var VERSION = 'b3c17d3b2e4c';
-var CACHE = 'tt-app-' + VERSION;
-var VOICE_CACHE = 'tt-voices';
-var SHARE_CACHE = 'tt-share';       /* a photo shared to Talanoa, until the page picks it up */
+var VERSION = 'fd8277e2eec8';
+var CACHE = 'tt3-app-' + VERSION;
+var VOICE_CACHE = 'tt3-voices';
+var SHARE_CACHE = 'tt3-share';       /* a photo shared to Talanoa, until the page picks it up */
 var PRECACHE = [
  "./",
  "index.html",
@@ -270,7 +270,7 @@ self.addEventListener('install', function (e) {
 self.addEventListener('activate', function (e) {
   e.waitUntil(caches.keys().then(function (keys) {
     return Promise.all(keys.filter(function (k) {
-      return k.indexOf('tt-app-') === 0 && k !== CACHE;
+      return k.indexOf('tt3-app-') === 0 && k !== CACHE;
     }).map(function (k) { return caches.delete(k); }));
   }).then(function () { return self.clients.claim(); }));
 });

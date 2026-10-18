@@ -6,14 +6,14 @@
 <script>
 /* Fitting above Android's navigation bar: see "ANDROID'S NAVIGATION BAR" below.
    If this phone was found to need it, ask for it before anything is drawn. */
-try { if (localStorage.getItem('tt_fit') === 'cover') document.querySelector('meta[name=viewport]').content += ', viewport-fit=cover'; } catch(e){}
+try { if (localStorage.getItem('tt3_fit') === 'cover') document.querySelector('meta[name=viewport]').content += ', viewport-fit=cover'; } catch(e){}
 </script>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#6B4423">
-<title>Talanoa</title>
-<meta name="application-name" content="Talanoa">
-<meta name="apple-mobile-web-app-title" content="Talanoa">
+<title>Talanoa 3</title>
+<meta name="application-name" content="Talanoa 3">
+<meta name="apple-mobile-web-app-title" content="Talanoa 3">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -926,16 +926,16 @@ function showMineStat(){
 }
 
 /* ---------------- settings state ---------------- */
-var voiceId = store('tt_voice') || (ASSETS.voices[0] ? ASSETS.voices[0].id : 'device');
+var voiceId = store('tt3_voice') || (ASSETS.voices[0] ? ASSETS.voices[0].id : 'device');
 if (voiceId !== 'device' && !ASSETS.clips[voiceId]) voiceId = ASSETS.voices[0] ? ASSETS.voices[0].id : 'device';
-var speed = parseFloat(store('tt_speed') || '1');
-var vol = parseFloat(store('tt_vol') || '1');
-var swipeOn = store('tt_swipe') !== '0';
+var speed = parseFloat(store('tt3_speed') || '1');
+var vol = parseFloat(store('tt3_vol') || '1');
+var swipeOn = store('tt3_swipe') !== '0';
 var hidden = [];
-try { hidden = JSON.parse(store('tt_hidden') || '[]'); } catch(e){}
+try { hidden = JSON.parse(store('tt3_hidden') || '[]'); } catch(e){}
 
 /* ---------------- built-in (device) voice ---------------- */
-var synth = window.speechSynthesis, deviceVoices = [], deviceChoice = store('tt_device_voice') || 'auto';
+var synth = window.speechSynthesis, deviceVoices = [], deviceChoice = store('tt3_device_voice') || 'auto';
 
 /* Best-sounding voice first: natural/neural/online voices beat the old robotic ones. */
 function voiceScore(v){
@@ -1121,7 +1121,7 @@ document.addEventListener('visibilitychange', function(){ if (document.hidden &&
    loudest peak still under full scale (-0.4 dB). Only the Web Audio voice can go through it (nearly
    every tap, and spelled words on the ABC page); the <audio> fallback and the phone's own voice
    stay as they are. */
-var LOUD = store('tt_loud') === '1', loudIn = null, LOUD_GAIN = 1.6;
+var LOUD = store('tt3_loud') === '1', loudIn = null, LOUD_GAIN = 1.6;
 function outNode(c){
   if (!LOUD) return c.destination;
   if (!loudIn || loudIn.context !== c){
@@ -1259,7 +1259,7 @@ function flashBanner(){
 }
 var lastSaid = null;              /* for "Say it again" on the big words */
 /* The last few things said, newest first (for "Recent sentences with the big words"). */
-var recent = [], RECENT = store('tt_recent') === '1';
+var recent = [], RECENT = store('tt3_recent') === '1';
 function setLast(e){
   lastSaid = e;
   var shown = e.shown || e.text;
@@ -1353,7 +1353,7 @@ function chimeFirst(then){
    dark in the middle of a sentence; after that the phone dims and
    locks as usual. (A wait timer keeps it on while it runs, too.)
    ============================================================ */
-var AWAKE = store('tt_awake') === '1', AWAKE_FOR = 5 * 60 * 1000;
+var AWAKE = store('tt3_awake') === '1', AWAKE_FOR = 5 * 60 * 1000;
 var wakeLock = null, wakeAsking = false, awakeUntil = 0, awakeT = null;
 function keepAwake(ms){
   if (!navigator.wakeLock) return;
@@ -1388,7 +1388,7 @@ document.addEventListener('visibilitychange', function(){ if (!document.hidden &
    a new one; and a sentence nothing is added to for 2 minutes clears
    itself, like the words at the top going back after 30 seconds.
    ============================================================ */
-var SENT = store('tt_sentence') === '1', sentence = [], SENT_MAX = 12, chain = 0;
+var SENT = store('tt3_sentence') === '1', sentence = [], SENT_MAX = 12, chain = 0;
 var SENT_FRESH = 2 * 60 * 1000, sentT = null, sentSaid = false;
 document.body.classList.toggle('sent', SENT);
 function sentenceText(parts){ return (parts || sentence).map(function(p){ return p.text; }).join(' '); }
@@ -1486,7 +1486,7 @@ var SPELLED = {label: 'Spelled a word', icon: '🔤', _key: 'ABC|Spelled a word'
 
 /* Settings → Talking in sentences: word suggestions above the letters, and a row of numbers under
    them (both off unless chosen). */
-var SUGGEST = store('tt_suggest') === '1', NUMBERS = store('tt_numbers') === '1';
+var SUGGEST = store('tt3_suggest') === '1', NUMBERS = store('tt3_numbers') === '1';
 var DIGITS = '1234567890'.split('').map(function(d){ return {label: d, kb: 'digit'}; });
 function buildKeys(page){
   var g = document.createElement('div');
@@ -1536,7 +1536,7 @@ function showTyped(root){
 }
 /* Words that start with what's being typed: words he has spoken before first (most used first), then
    the most common words. Only words the chosen voice says whole (the rest would be spelled out). */
-var rank = null, rankLoading = null, TYPED_WORDS = 'tt_typedwords';
+var rank = null, rankLoading = null, TYPED_WORDS = 'tt3_typedwords';
 function loadRank(){
   if (rank || rankLoading) return rankLoading || Promise.resolve(rank);
   rankLoading = fetch('abc-rank.txt').then(function(r){ return r.ok ? r.text() : ''; }).catch(function(){ return ''; })
@@ -1751,7 +1751,7 @@ LIB.pages.forEach(function(p){ if (p.words) p.tiles.forEach(function(t){ if (t &
 var PER_PAGE = 12;
 /* Settings → Screen → Bigger pictures: 6 on a screen, so each page becomes two screens ("Food", "Food 2").
    A screen with nothing on it is left out. */
-var SIX = store('tt_six') === '1';
+var SIX = store('tt3_six') === '1';
 var allPages = [];            /* long pages are split into "Food 2", "Food 3", ... */
 /* The board's own pages, then the ones made on this phone, then ABC (always last). */
 function boardPages(){
@@ -1787,11 +1787,11 @@ function visiblePages(){
 var pages = visiblePages(), current = 0;
 /* After an automatic update the app reloads; come back to the same page, with any words typed on the ABC page. */
 try {
-  var resume = sessionStorage.getItem('tt_resume_page');
-  sessionStorage.removeItem('tt_resume_page');
+  var resume = sessionStorage.getItem('tt3_resume_page');
+  sessionStorage.removeItem('tt3_resume_page');
   pages.forEach(function(p, i){ if (p.name === resume) current = i; });
-  typed = sessionStorage.getItem('tt_resume_typed') || '';
-  sessionStorage.removeItem('tt_resume_typed');
+  typed = sessionStorage.getItem('tt3_resume_typed') || '';
+  sessionStorage.removeItem('tt3_resume_typed');
 } catch(e){}
 
 /* ============================================================
@@ -1826,8 +1826,8 @@ if (/[?&]page=/.test(location.search)){ try { history.replaceState(history.state
    by itself after 2 hours so a forgotten lock doesn't stay for days.
    ============================================================ */
 var LOCK_FOR = 2 * 3600 * 1000, LOCKED = null;
-try { LOCKED = JSON.parse(store('tt_lock') || 'null'); } catch(e){}
-if (LOCKED && !(LOCKED.until > Date.now())){ LOCKED = null; store('tt_lock', ''); }
+try { LOCKED = JSON.parse(store('tt3_lock') || 'null'); } catch(e){}
+if (LOCKED && !(LOCKED.until > Date.now())){ LOCKED = null; store('tt3_lock', ''); }
 function lockedKey(){
   if (LOCKED && LOCKED.until <= Date.now()) unlockPage();
   return LOCKED ? LOCKED.key : null;
@@ -1841,18 +1841,18 @@ function lockGroup(){                                            /* the screens 
 function lockPage(){
   var p = pages[current];
   LOCKED = {key: p.key, name: p.name.replace(/ \d+$/, ''), until: Date.now() + LOCK_FOR};
-  store('tt_lock', JSON.stringify(LOCKED));
+  store('tt3_lock', JSON.stringify(LOCKED));
   showPageInfo();
 }
 function unlockPage(){
-  LOCKED = null; store('tt_lock', '');
+  LOCKED = null; store('tt3_lock', '');
   if (titleBtn) showPageInfo();
 }
 setInterval(function(){ if (LOCKED) lockedKey(); }, 30000);     /* the 2 hours are up: the arrows come back */
 (function(){                                                     /* opened while locked: on the locked page */
   var k = lockedKey(); if (!k) return;
   var i = pageIndex(k);
-  if (i === -1){ LOCKED = null; store('tt_lock', ''); }
+  if (i === -1){ LOCKED = null; store('tt3_lock', ''); }
   else if (pages[current].key !== k) current = i;
   pendingLink = null;
 })();
@@ -2101,8 +2101,8 @@ listenForTaps(stage, true);
    nothing chosen it rests ("Tap to start scanning"). The brown bar
    isn't covered: hold ⚙ for Settings as usual.
    ============================================================ */
-var SCAN = store('tt_scan') === '1', SCAN_MS = parseFloat(store('tt_scan_speed') || '2') * 1000;
-var SCAN_ROWS = store('tt_scan_rows') === '1', SCAN_SAY = store('tt_scan_say') === '1';
+var SCAN = store('tt3_scan') === '1', SCAN_MS = parseFloat(store('tt3_scan_speed') || '2') * 1000;
+var SCAN_ROWS = store('tt3_scan_rows') === '1', SCAN_SAY = store('tt3_scan_say') === '1';
 var scanCatch = document.getElementById('scanCatch'), scanT2 = null, scanState = null, scanLastPick = 0;
 function scanRows(){
   var rows = [], tops = [];
@@ -2326,7 +2326,7 @@ document.addEventListener('visibilitychange', function(){ if (document.hidden &&
    it's closed, Android itself opens the sticker's address.) Chrome
    on Android only: Settings shows this only where the phone has it.
    ============================================================ */
-var NFC_OK = 'NDEFReader' in window, NFC_ON = store('tt_nfc') === '1', nfcScan = null, nfcWriting = null;
+var NFC_OK = 'NDEFReader' in window, NFC_ON = store('tt3_nfc') === '1', nfcScan = null, nfcWriting = null;
 function nfcStat(t){ document.getElementById('nfcStat').textContent = t; }
 function startNfc(){
   if (!NFC_OK) return Promise.reject(new Error('no NFC'));
@@ -2359,7 +2359,7 @@ document.body.classList.toggle('scan', SCAN);
 preloadCore();                             /* the top row's clips, ready for the first tap */
 loadAbcList();                             /* the ABC page's long word list for this voice */
 window.addEventListener('resize', function(){ fitLabels(coreEl); if (gridEl) fitLabels(gridEl); if (SCAN) scanStart(); });
-var STRONG = store('tt_strong') === '1', BIG = store('tt_big') !== '0', ROOM = store('tt_room') === '1';
+var STRONG = store('tt3_strong') === '1', BIG = store('tt3_big') !== '0', ROOM = store('tt3_room') === '1';
 document.body.classList.toggle('strong', STRONG);
 document.body.classList.toggle('room', ROOM);
 
@@ -2391,32 +2391,32 @@ function openSettings(){
 var calmBox = document.getElementById('calmOn'), bigBox = document.getElementById('bigOn');
 var strongBox = document.getElementById('strongOn'), countBox = document.getElementById('countOn'), roomBox = document.getElementById('roomOn');
 roomBox.addEventListener('change', function(){
-  ROOM = roomBox.checked; store('tt_room', ROOM ? '1' : '0');
+  ROOM = roomBox.checked; store('tt3_room', ROOM ? '1' : '0');
   document.body.classList.toggle('room', ROOM);
   fitLabels(coreEl); if (gridEl) fitLabels(gridEl); showScreen();
 });
-calmBox.addEventListener('change', function(){ CALM = calmBox.checked; store('tt_calm', CALM ? '1' : '0'); });
-bigBox.addEventListener('change', function(){ BIG = bigBox.checked; store('tt_big', BIG ? '1' : '0'); });
+calmBox.addEventListener('change', function(){ CALM = calmBox.checked; store('tt3_calm', CALM ? '1' : '0'); });
+bigBox.addEventListener('change', function(){ BIG = bigBox.checked; store('tt3_big', BIG ? '1' : '0'); });
 strongBox.addEventListener('change', function(){
-  STRONG = strongBox.checked; store('tt_strong', STRONG ? '1' : '0');
+  STRONG = strongBox.checked; store('tt3_strong', STRONG ? '1' : '0');
   document.body.classList.toggle('strong', STRONG);
 });
-countBox.addEventListener('change', function(){ countOn = countBox.checked; store('tt_count', countOn ? '1' : '0'); buildCounts(); });
+countBox.addEventListener('change', function(){ countOn = countBox.checked; store('tt3_count', countOn ? '1' : '0'); buildCounts(); });
 
 /* Talking in sentences, and Bigger pictures (all off unless chosen) */
 var sentBox = document.getElementById('sentOn'), suggestBox = document.getElementById('suggestOn'), numbersBox = document.getElementById('numbersOn');
 var recentBox = document.getElementById('recentOn'), sixBox = document.getElementById('sixOn');
 sentBox.addEventListener('change', function(){
-  SENT = sentBox.checked; store('tt_sentence', SENT ? '1' : '0');
+  SENT = sentBox.checked; store('tt3_sentence', SENT ? '1' : '0');
   document.body.classList.toggle('sent', SENT);
   if (!SENT) clearSentence();
 });
 function redrawAbc(){ if (pages[current] && pages[current].keyboard) render(''); }
-suggestBox.addEventListener('change', function(){ SUGGEST = suggestBox.checked; store('tt_suggest', SUGGEST ? '1' : '0'); redrawAbc(); });
-numbersBox.addEventListener('change', function(){ NUMBERS = numbersBox.checked; store('tt_numbers', NUMBERS ? '1' : '0'); redrawAbc(); });
-recentBox.addEventListener('change', function(){ RECENT = recentBox.checked; store('tt_recent', RECENT ? '1' : '0'); });
+suggestBox.addEventListener('change', function(){ SUGGEST = suggestBox.checked; store('tt3_suggest', SUGGEST ? '1' : '0'); redrawAbc(); });
+numbersBox.addEventListener('change', function(){ NUMBERS = numbersBox.checked; store('tt3_numbers', NUMBERS ? '1' : '0'); redrawAbc(); });
+recentBox.addEventListener('change', function(){ RECENT = recentBox.checked; store('tt3_recent', RECENT ? '1' : '0'); });
 sixBox.addEventListener('change', function(){
-  SIX = sixBox.checked; store('tt_six', SIX ? '1' : '0');
+  SIX = sixBox.checked; store('tt3_six', SIX ? '1' : '0');
   var here = pages[current] && pages[current].key;
   buildPages(); pages = visiblePages();
   var idx = -1;
@@ -2428,11 +2428,11 @@ sixBox.addEventListener('change', function(){
 /* Loud voice, and keeping the screen on (both off unless chosen) */
 var loudBox = document.getElementById('loudOn'), awakeBox = document.getElementById('awakeOn');
 var logCheck = document.getElementById('logOn'), healthBox = document.getElementById('healthOn');
-logCheck.addEventListener('change', function(){ LOG_ON = logCheck.checked; store('tt_log', LOG_ON ? '1' : '0'); if (!LOG_ON) store(SAIDLOG, ''); buildLog(); });
-healthBox.addEventListener('change', function(){ HEALTH = healthBox.checked; store('tt_healthchime', HEALTH ? '1' : '0'); });
-loudBox.addEventListener('change', function(){ LOUD = loudBox.checked; store('tt_loud', LOUD ? '1' : '0'); sample(); });
+logCheck.addEventListener('change', function(){ LOG_ON = logCheck.checked; store('tt3_log', LOG_ON ? '1' : '0'); if (!LOG_ON) store(SAIDLOG, ''); buildLog(); });
+healthBox.addEventListener('change', function(){ HEALTH = healthBox.checked; store('tt3_healthchime', HEALTH ? '1' : '0'); });
+loudBox.addEventListener('change', function(){ LOUD = loudBox.checked; store('tt3_loud', LOUD ? '1' : '0'); sample(); });
 awakeBox.addEventListener('change', function(){
-  AWAKE = awakeBox.checked; store('tt_awake', AWAKE ? '1' : '0');
+  AWAKE = awakeBox.checked; store('tt3_awake', AWAKE ? '1' : '0');
   if (AWAKE) keepAwake(AWAKE_FOR); else { awakeUntil = 0; letSleep(); }
 });
 
@@ -2443,10 +2443,10 @@ function showScanOpts(){
   scanSpeedEl.value = SCAN_MS / 1000; document.getElementById('scanSpeedVal').textContent = (SCAN_MS / 1000) + ' seconds';
   document.getElementById('scanRows').checked = SCAN_ROWS; document.getElementById('scanSay').checked = SCAN_SAY;
 }
-scanBox.addEventListener('change', function(){ store('tt_scan', scanBox.checked ? '1' : '0'); setScan(scanBox.checked); showScanOpts(); });
-scanSpeedEl.addEventListener('input', function(){ SCAN_MS = parseFloat(scanSpeedEl.value) * 1000; store('tt_scan_speed', String(SCAN_MS / 1000)); showScanOpts(); });
-document.getElementById('scanRows').addEventListener('change', function(e){ SCAN_ROWS = e.target.checked; store('tt_scan_rows', SCAN_ROWS ? '1' : '0'); });
-document.getElementById('scanSay').addEventListener('change', function(e){ SCAN_SAY = e.target.checked; store('tt_scan_say', SCAN_SAY ? '1' : '0'); });
+scanBox.addEventListener('change', function(){ store('tt3_scan', scanBox.checked ? '1' : '0'); setScan(scanBox.checked); showScanOpts(); });
+scanSpeedEl.addEventListener('input', function(){ SCAN_MS = parseFloat(scanSpeedEl.value) * 1000; store('tt3_scan_speed', String(SCAN_MS / 1000)); showScanOpts(); });
+document.getElementById('scanRows').addEventListener('change', function(e){ SCAN_ROWS = e.target.checked; store('tt3_scan_rows', SCAN_ROWS ? '1' : '0'); });
+document.getElementById('scanSay').addEventListener('change', function(e){ SCAN_SAY = e.target.checked; store('tt3_scan_say', SCAN_SAY ? '1' : '0'); });
 
 /* The staff tools along the top of Settings */
 function showTools(){
@@ -2514,7 +2514,7 @@ function showVisits(){
 }
 ['dad', 'mom'].forEach(function(who){
   var row = document.getElementById('visit-' + who), date = row.querySelector('input[type=date]'), weekly = row.querySelector('input[type=checkbox]');
-  function save(){ store('tt_visit_' + who, date.value ? JSON.stringify({date: date.value, weekly: weekly.checked}) : ''); showVisits(); }
+  function save(){ store('tt3_visit_' + who, date.value ? JSON.stringify({date: date.value, weekly: weekly.checked}) : ''); showVisits(); }
   date.addEventListener('change', save); weekly.addEventListener('change', save);
   row.querySelector('button').addEventListener('click', function(){ date.value = ''; weekly.checked = false; save(); });
 });
@@ -2575,11 +2575,11 @@ function showNfc(){
   nfcPageSel.value = seen[was] ? was : pages[current].key;
 }
 nfcBox.addEventListener('change', function(){
-  NFC_ON = nfcBox.checked; store('tt_nfc', NFC_ON ? '1' : '0');
+  NFC_ON = nfcBox.checked; store('tt3_nfc', NFC_ON ? '1' : '0');
   if (!NFC_ON){ stopNfc(); nfcStat(''); return; }
   nfcStat('Starting…');
   startNfc().then(function(){ nfcStat('✓ Touch the back of the phone to a sticker to open its page.'); },
-    function(){ NFC_ON = false; store('tt_nfc', '0'); nfcBox.checked = false;
+    function(){ NFC_ON = false; store('tt3_nfc', '0'); nfcBox.checked = false;
                 nfcStat('NFC didn’t start. Check that NFC is on (pull down from the top of the screen), and allow it for this site.'); });
 });
 document.getElementById('nfcWrite').addEventListener('click', function(){
@@ -2638,7 +2638,7 @@ function buildVoiceList(){
     t.firstChild.textContent = o.name; t.lastChild.textContent = o.desc;
     lab.appendChild(r); lab.appendChild(t);
     r.addEventListener('change', function(){
-      voiceId = o.id; store('tt_voice', voiceId);
+      voiceId = o.id; store('tt3_voice', voiceId);
       preloadCore();
       sample();
       loadAbcList();
@@ -2655,29 +2655,29 @@ function sample(){
 }
 
 document.getElementById('deviceVoice').addEventListener('change', function(e){
-  deviceChoice = e.target.value; store('tt_device_voice', deviceChoice);
+  deviceChoice = e.target.value; store('tt3_device_voice', deviceChoice);
   stopTalking(); speakDevice('Hi! This is my voice.');
 });
 
 var sEl = document.getElementById('speed'), sV = document.getElementById('speedVal');
 sEl.value = speed; sV.textContent = speed.toFixed(2);
-sEl.addEventListener('input', function(e){ speed = parseFloat(e.target.value); sV.textContent = speed.toFixed(2); store('tt_speed', speed); });
+sEl.addEventListener('input', function(e){ speed = parseFloat(e.target.value); sV.textContent = speed.toFixed(2); store('tt3_speed', speed); });
 sEl.addEventListener('change', function(){ if (speed !== 1) Object.keys(quick).forEach(slowSoon); });   /* slowed copies at the new speed */
 sEl.addEventListener('change', function(){ lastSaid = {id: '_speed', text: 'This is how fast I talk'}; show(lastSaid.text); say('_speed', lastSaid.text); });
 
 var vEl = document.getElementById('vol'), vV = document.getElementById('volVal');
 vEl.value = vol; vV.textContent = vol.toFixed(1);
-vEl.addEventListener('input', function(e){ vol = parseFloat(e.target.value); vV.textContent = vol.toFixed(1); store('tt_vol', vol); });
+vEl.addEventListener('input', function(e){ vol = parseFloat(e.target.value); vV.textContent = vol.toFixed(1); store('tt3_vol', vol); });
 
 var swipeBox = document.getElementById('swipeOn');
 swipeBox.checked = swipeOn;
-swipeBox.addEventListener('change', function(){ swipeOn = swipeBox.checked; store('tt_swipe', swipeOn ? '1' : '0'); });
+swipeBox.addEventListener('change', function(){ swipeOn = swipeBox.checked; store('tt3_swipe', swipeOn ? '1' : '0'); });
 
 var fxRadios = document.querySelectorAll('#fxList input');
 function showFxLevel(){ for (var i = 0; i < fxRadios.length; i++) fxRadios[i].checked = fxRadios[i].value === FX_LEVEL; }
 for (var fi = 0; fi < fxRadios.length; fi++){
   fxRadios[fi].addEventListener('change', function(e){
-    setFxLevel(e.target.value); store('tt_fx', FX_LEVEL);
+    setFxLevel(e.target.value); store('tt3_fx', FX_LEVEL);
     var lab = e.target.closest('label');                /* a taste of it, right on the button */
     if (FX_LEVEL !== 'off'){ bounce(lab); rings(lab, '#3C6E9F'); }
     if (FX_LEVEL === 'lots') burst(lab, 'confetti', '#3C6E9F', 1);
@@ -2700,7 +2700,7 @@ function buildPageList(){
         hidden = hidden.filter(function(k){ return k !== p.key; });   /* keep at least one page */
         c.checked = true;
       }
-      store('tt_hidden', JSON.stringify(hidden));
+      store('tt3_hidden', JSON.stringify(hidden));
       var here = pages[current] && pages[current].key;
       pages = visiblePages();
       var idx = -1;
@@ -2838,7 +2838,7 @@ function dateAnswer(d){                       /* "Today is Saturday, October ele
 }
 
 /* ---- visits (Settings → Visits): a date, and "every week" if it repeats ---- */
-function readVisit(who){ try { return JSON.parse(store('tt_visit_' + who) || 'null'); } catch(e){ return null; } }
+function readVisit(who){ try { return JSON.parse(store('tt3_visit_' + who) || 'null'); } catch(e){ return null; } }
 function nextVisit(who){
   var v = readVisit(who);
   if (!v || !/^\d{4}-\d\d-\d\d$/.test(v.date || '')) return null;
@@ -2855,8 +2855,8 @@ function longDate(d){ return DAY_NAMES[d.getDay()] + ', ' + MONTH_NAMES[d.getMon
 
 /* ---- the wait timer (Settings → ⏳): {end, total, then: a picture's key, done} ---- */
 var TIMER = null, timerT = null;
-try { TIMER = JSON.parse(store('tt_timer') || 'null'); } catch(e){}
-if (TIMER && Date.now() > TIMER.end + 30 * 60000){ TIMER = null; store('tt_timer', ''); }   /* ended long ago */
+try { TIMER = JSON.parse(store('tt3_timer') || 'null'); } catch(e){}
+if (TIMER && Date.now() > TIMER.end + 30 * 60000){ TIMER = null; store('tt3_timer', ''); }   /* ended long ago */
 function timerLeft(){ return TIMER ? Math.max(0, TIMER.end - Date.now()) : 0; }
 function timerAnswer(){
   var left = timerLeft(), s = Math.ceil(left / 1000), m = Math.ceil(s / 60);
@@ -2864,7 +2864,7 @@ function timerAnswer(){
   if (s <= 60) return {pieces: ['Almost done waiting'], text: 'Almost done waiting'};
   return {pieces: [m, 'more minutes'], text: numberWords(m).join(' ') + ' more minutes'};
 }
-function saveTimer(){ store('tt_timer', TIMER ? JSON.stringify(TIMER) : ''); }
+function saveTimer(){ store('tt3_timer', TIMER ? JSON.stringify(TIMER) : ''); }
 function startTimer(mins, then){
   TIMER = {end: Date.now() + mins * 60000, total: mins * 60000, then: then || null, done: false};
   saveTimer(); armTimer(); keepAwake(mins * 60000 + 30000);
@@ -2916,12 +2916,12 @@ armTimer(); showTimerChip();
 
 /* ---- First, then (Settings → ➡️): {first, then: pictures' keys, done, at}; it's gone after 12 hours ---- */
 var NEXTUP = null;
-try { NEXTUP = JSON.parse(store('tt_nextup') || 'null'); } catch(e){}
+try { NEXTUP = JSON.parse(store('tt3_nextup') || 'null'); } catch(e){}
 function nextUp(){
-  if (NEXTUP && Date.now() - NEXTUP.at > 12 * 3600000){ NEXTUP = null; store('tt_nextup', ''); }
+  if (NEXTUP && Date.now() - NEXTUP.at > 12 * 3600000){ NEXTUP = null; store('tt3_nextup', ''); }
   return NEXTUP && BY_KEY[NEXTUP.first] && BY_KEY[NEXTUP.then] ? NEXTUP : null;
 }
-function setNextUp(first, then){ NEXTUP = first ? {first: first, then: then, done: false, at: Date.now()} : null; store('tt_nextup', NEXTUP ? JSON.stringify(NEXTUP) : ''); }
+function setNextUp(first, then){ NEXTUP = first ? {first: first, then: then, done: false, at: Date.now()} : null; store('tt3_nextup', NEXTUP ? JSON.stringify(NEXTUP) : ''); }
 /* A picture's words, one ABC recording each (every board word has one in every voice). */
 function labelPieces(it){
   return it.label.toLowerCase().split(/[^a-z']+/).filter(Boolean).map(function(w){ return {src: abcClip('words', w.replace(/[^a-z]/g, ''))}; });
@@ -3083,7 +3083,7 @@ document.getElementById('infoSay').addEventListener('click', function(){
 document.getElementById('infoClose').addEventListener('click', closeCard);
 document.getElementById('infoDone').addEventListener('click', function(){
   if (!nextUp()) return;
-  NEXTUP.done = true; store('tt_nextup', JSON.stringify(NEXTUP)); drawCard('next'); fitCard();
+  NEXTUP.done = true; store('tt3_nextup', JSON.stringify(NEXTUP)); drawCard('next'); fitCard();
 });
 /* The big words as big as fit across the card. */
 function fitCard(){
@@ -3128,8 +3128,8 @@ function hintTile(el){
   clearTimeout(el._hintT); el._hintT = setTimeout(function(){ el.classList.remove('hint'); }, 5200);
 }
 var WOW = null;
-try { WOW = JSON.parse(store('tt_wow') || 'null'); } catch(e){}
-function wowKey(){ if (WOW && Date.now() > WOW.until){ WOW = null; store('tt_wow', ''); } return WOW ? WOW.key : null; }
+try { WOW = JSON.parse(store('tt3_wow') || 'null'); } catch(e){}
+function wowKey(){ if (WOW && Date.now() > WOW.until){ WOW = null; store('tt3_wow', ''); } return WOW ? WOW.key : null; }
 /* the gold star on the word of the week, wherever it is on screen */
 function markWow(){
   var k = wowKey(), els = document.querySelectorAll('#stage .tile, .core-btn');
@@ -3153,10 +3153,10 @@ document.getElementById('modelGo').addEventListener('click', function(){
 });
 document.getElementById('wowPick').addEventListener('click', function(){
   pickTiles({max: 1, min: 1, title: 'Word of the week', hint: 'Tap the picture to use often this week, then Done.', done: function(keys){
-    WOW = {key: keys[0], until: Date.now() + 7 * 864e5}; store('tt_wow', JSON.stringify(WOW)); markWow(); showModelSheet();
+    WOW = {key: keys[0], until: Date.now() + 7 * 864e5}; store('tt3_wow', JSON.stringify(WOW)); markWow(); showModelSheet();
   }});
 });
-document.getElementById('wowOff').addEventListener('click', function(){ WOW = null; store('tt_wow', ''); markWow(); showModelSheet(); });
+document.getElementById('wowOff').addEventListener('click', function(){ WOW = null; store('tt3_wow', ''); markWow(); showModelSheet(); });
 document.getElementById('modelDone').addEventListener('click', function(){ modelSheet.classList.remove('open'); showTools(); });
 
 /* ============================================================
@@ -3192,7 +3192,7 @@ function markChoice(el){
    "Chime for health words" (also off unless chosen) puts the
    attention chime before those words, so staff across the room hear.
    ============================================================ */
-var LOG_ON = store('tt_log') === '1', HEALTH = store('tt_healthchime') === '1', SAIDLOG = 'tt_saidlog';
+var LOG_ON = store('tt3_log') === '1', HEALTH = store('tt3_healthchime') === '1', SAIDLOG = 'tt3_saidlog';
 function isHealth(key){ return /^(Ouch|Body|Sick)\|/.test(key || '') || key === 'core|Help'; }
 function readLog(){ try { return JSON.parse(store(SAIDLOG) || '[]') || []; } catch(e){ return []; } }
 function logSaid(text, item){
@@ -3235,7 +3235,7 @@ for (var lri = 0; lri < logRadios.length; lri++) logRadios[lri].addEventListener
    Settings shows the most-used pictures and the ones not used
    lately, to see which words matter and which are missing.
    ============================================================ */
-var COUNTS = 'tt_counts', KEEP_DAYS = 90, countOn = store('tt_count') !== '0', lastCount = {key: '', t: 0};
+var COUNTS = 'tt3_counts', KEEP_DAYS = 90, countOn = store('tt3_count') !== '0', lastCount = {key: '', t: 0};
 function dayStr(d){ return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
 function readCounts(){
   try { var c = JSON.parse(store(COUNTS) || 'null'); if (c && c.days) return c; } catch(e){}
@@ -3345,7 +3345,7 @@ function ownReq(r){ return new Promise(function(ok, no){ r.onsuccess = function(
 function openOwn(){
   if (!ownReady) ownReady = new Promise(function(ok, no){
     if (!window.indexedDB) { no(new Error('no storage')); return; }
-    var r = indexedDB.open('talanoa', 1);
+    var r = indexedDB.open('talanoa3', 1);
     r.onupgradeneeded = function(){ r.result.createObjectStore('mine', {keyPath: 'key'}); };
     r.onsuccess = function(){ ownDb = r.result; ok(ownDb); };
     r.onerror = function(){ no(r.error); };
@@ -3398,7 +3398,7 @@ function showOwnStat(){
     ? 'On this phone: ' + p + (p === 1 ? ' photo' : ' photos') + ' and ' + v + (v === 1 ? ' recording.' : ' recordings.') + ' Save a backup now and then.'
     : 'None yet.';
   /* when the last backup was made (Save or Send), and a nudge after a month */
-  var at = parseInt(store('tt_backup_at') || '0', 10), days = at ? Math.floor((Date.now() - at) / 864e5) : -1;
+  var at = parseInt(store('tt3_backup_at') || '0', 10), days = at ? Math.floor((Date.now() - at) / 864e5) : -1;
   var bs = document.getElementById('backupStat'), any = p || v || Object.keys(mineRecs).length;
   bs.textContent = !any ? '' : days < 0 ? '⚠ No backup made on this phone yet.'
                  : 'Last backup: ' + (days === 0 ? 'today' : days === 1 ? 'yesterday' : days + ' days ago') + (days >= 30 ? '. Time for a new one.' : '.');
@@ -3698,12 +3698,12 @@ function makeBackup(){
   return openOwn().then(function(){ return ownReq(ownStore('readonly').getAll()); }).then(function(all){
     if (!all.length) return null;
     return Promise.all(all.map(packRecord)).then(function(items){
-      return {name: 'talanoa-photos-and-voices-' + dayStr(new Date()),
-              text: JSON.stringify({app: 'talanoa', kind: 'photos-and-voices', version: 2, saved: new Date().toISOString(), items: items})};
+      return {name: 'talanoa3-photos-and-voices-' + dayStr(new Date()),   /* its own name and label, so Talanoa's backups can't be mixed in */
+              text: JSON.stringify({app: 'talanoa3', kind: 'photos-and-voices', version: 2, saved: new Date().toISOString(), items: items})};
     });
   });
 }
-function backedUp(){ store('tt_backup_at', String(Date.now())); showOwnStat(); }
+function backedUp(){ store('tt3_backup_at', String(Date.now())); showOwnStat(); }
 document.getElementById('ownSave').addEventListener('click', function(){
   var stat = document.getElementById('ownStat');
   makeBackup().then(function(b){
@@ -3743,8 +3743,10 @@ document.getElementById('ownFile').addEventListener('change', function(e){
     var data;
     try { data = JSON.parse(t); }
     catch(err){ throw new Error(/^\s*\{/.test(t) ? 'That backup file is damaged or only partly copied (it stops partway). Copy it onto the phone again.'
-                                                 : 'That file isn’t a Talanoa backup. Choose the file named “talanoa-photos-and-voices-…”.'); }
-    if (!data || data.app !== 'talanoa' || !Array.isArray(data.items)) throw new Error('That file isn’t a Talanoa backup. Choose the file named “talanoa-photos-and-voices-…”.');
+                                                 : 'That file isn’t a Talanoa 3 backup. Choose the file named “talanoa3-photos-and-voices-…”.'); }
+    if (data && data.app === 'talanoa') throw new Error('That backup is from Talanoa (another board), not Talanoa 3, so nothing was put back. Choose the file named “talanoa3-photos-and-voices-…”.');
+    if (data && data.app === 'talanoa2') throw new Error('That backup is from Talanoa 2 (another board), not Talanoa 3, so nothing was put back. Choose the file named “talanoa3-photos-and-voices-…”.');
+    if (!data || data.app !== 'talanoa3' || !Array.isArray(data.items)) throw new Error('That file isn’t a Talanoa 3 backup. Choose the file named “talanoa3-photos-and-voices-…”.');
     return openOwn().catch(fail('This phone won’t let Talanoa keep photos and voices (private browsing, or site storage turned off in Chrome).')).then(function(){
       return Promise.all(data.items.map(unpackRecord)).catch(fail('Part of that backup is damaged, so nothing was put back. Try another copy of the file.'));
     }).then(function(recs){
@@ -4021,7 +4023,7 @@ function takeShared(){
     document.getElementById('shared').classList.add('open');
   }).catch(function(){});
 }
-var SHARE_CACHE = 'tt-share';
+var SHARE_CACHE = 'tt3-share';
 function closeShared(){ document.getElementById('shared').classList.remove('open'); }
 document.getElementById('sharedCancel').addEventListener('click', function(){ sharedBlob = null; closeShared(); });
 document.getElementById('sharedNew').addEventListener('click', function(){ closeShared(); var b = sharedBlob; sharedBlob = null; makeNewPicture(b); });
@@ -4328,7 +4330,7 @@ function showMineList(){
 }
 
 /* ---------------- offline ---------------- */
-var VOICE_CACHE = 'tt-voices';
+var VOICE_CACHE = 'tt3-voices';
 function voiceUrls(){
   if (voiceId === 'device' || !ASSETS.clips[voiceId]) return [];
   var abc = ASSETS.abc || {}, seen = {}, out = [];
@@ -4416,14 +4418,14 @@ document.addEventListener('pointerdown', function(){ lastTap = Date.now(); }, tr
 function checkForUpdate(){
   if (!swReg) return Promise.resolve(false);
   return swReg.update().then(function(){
-    store('tt_checked', String(Date.now()));
+    store('tt3_checked', String(Date.now()));
     return !!(swReg.installing || swReg.waiting);
   });
 }
 function applyUpdate(){
   try {
-    sessionStorage.setItem('tt_resume_page', pages[current] ? pages[current].name : '');
-    if (typed) sessionStorage.setItem('tt_resume_typed', typed);
+    sessionStorage.setItem('tt3_resume_page', pages[current] ? pages[current].name : '');
+    if (typed) sessionStorage.setItem('tt3_resume_typed', typed);
   } catch(e){}
   location.reload();
 }
@@ -4438,7 +4440,7 @@ function showVersion(text){
   var el = document.getElementById('updateStat');
   if (text){ el.textContent = text; return; }
   if (!navigator.serviceWorker || !navigator.serviceWorker.controller){ el.textContent = 'Version: still setting up'; return; }
-  var checked = parseInt(store('tt_checked') || '0', 10);
+  var checked = parseInt(store('tt3_checked') || '0', 10);
   var when = checked ? new Date(checked).toLocaleString([], {month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'}) : 'not yet';
   var ch = new MessageChannel();
   ch.port1.onmessage = function(e){
@@ -4538,13 +4540,13 @@ function coverOn(){ return /viewport-fit=cover/.test(viewportMeta.content); }
 function bottomInset(){ return parseFloat(getComputedStyle(document.getElementById('insetProbe')).paddingBottom) || 0; }
 function afterFrames(n, fn){ requestAnimationFrame(function(){ if (n > 1) afterFrames(n - 1, fn); else fn(); }); }
 function fitDone(mode){
-  try { localStorage.setItem('tt_fit', mode); localStorage.setItem('tt_fit_size', innerWidth + 'x' + innerHeight); } catch(e){}
+  try { localStorage.setItem('tt3_fit', mode); localStorage.setItem('tt3_fit_size', innerWidth + 'x' + innerHeight); } catch(e){}
   fitLabels(coreEl); if (gridEl) fitLabels(gridEl);
 }
 function fitNavBar(){
   var installed = matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches;
   if (!installed || !/Android/i.test(navigator.userAgent)) return;
-  var mode = store('tt_fit'), size = store('tt_fit_size');
+  var mode = store('tt3_fit'), size = store('tt3_fit_size');
   if (mode === 'none' && size === innerWidth + 'x' + innerHeight) return;      /* checked before: nothing to do */
   if (mode === 'cover' && coverOn()){                                         /* set before drawing: is it still right? */
     setTimeout(function(){ if (bottomInset() > 0) fitDone('cover'); else { setCover(false); fitDone('none'); } }, 400);
@@ -4587,7 +4589,7 @@ try {
    on screen, so it costs no battery in between.
    Settings: Lots / A little (bounces, rings and the twinkling star; no flying sparkles) / Off.
    ============================================================ */
-var FX_LEVEL = store('tt_fx') || (matchMedia('(prefers-reduced-motion: reduce)').matches ? 'little' : 'lots');
+var FX_LEVEL = store('tt3_fx') || (matchMedia('(prefers-reduced-motion: reduce)').matches ? 'little' : 'lots');
 if (['lots', 'little', 'off'].indexOf(FX_LEVEL) === -1) FX_LEVEL = 'lots';
 function setFxLevel(v){
   FX_LEVEL = v;
@@ -4707,7 +4709,7 @@ function colorOf(el){
 }
 /* "Calm answers" (Settings, off unless chosen): every answer word (Yes, No,
    feelings, the Talk page) gets the same gentle sparkles. */
-var CALM = store('tt_calm') === '1';
+var CALM = store('tt3_calm') === '1';
 function fxKind(el, item){
   var g = el && el.closest ? el.closest('.grid') : null;
   if (CALM && (item.answer || (g && g._answer))) return 'soft';

@@ -1,16 +1,22 @@
-# Talanoa
+# Talanoa 3
+
+> **Being prepared (2026-10-18):** a copy of [Talanoa](https://github.com/tcdeveloper27/Talanoa) for another resident
+> (after [Talanoa 2](https://github.com/tcdeveloper27/Talanoa-2)). It still holds Brenton's board until the new board's words
+> arrive. The website isn't switched on yet. It saves everything under its own names (`tt3_…`, `tt3-voices`, `tt3-app-…`,
+> the `talanoa3` database), so it can be installed on the same phone as Talanoa or Talanoa 2 without mixing settings or
+> deleting their offline copies.
 
 *Talanoa* (tah-lah-NOH-ah) is Tongan for talking together.
 
 Made for the residents of Faleofaz.
 
-A tap-to-speak picture board (AAC). Tap a tile and it says the phrase out loud in a natural voice. Brenton uses it on his Android phone.
+A tap-to-speak picture board (AAC). Tap a tile and it says the phrase out loud in a natural voice. (Brenton uses the original, Talanoa, on his Android phone.)
 
-**Open it:** https://tcdeveloper27.github.io/Talanoa/
+**Open it:** https://tcdeveloper27.github.io/Talanoa-3/
 
 On an Android phone (or tablet), open the link in Chrome, then **⋮ → Add to Home screen** (or **Install app**). It opens full screen like an app, stays upright, and keeps working with no internet.
 
-**Staff guide:** https://tcdeveloper27.github.io/Talanoa/manual/ (printable PDF: [manual/Talanoa-Staff-Guide.pdf](manual/Talanoa-Staff-Guide.pdf)). Also in the app: hold ⚙ → **Staff guide**.
+**Staff guide:** https://tcdeveloper27.github.io/Talanoa-3/manual/ (printable PDF: [manual/Talanoa-Staff-Guide.pdf](manual/Talanoa-Staff-Guide.pdf)). Also in the app: hold ⚙ → **Staff guide**.
 
 ## Using it
 
@@ -42,7 +48,7 @@ On an Android phone (or tablet), open the link in Chrome, then **⋮ → Add to 
   - **Hey page** (just above ABC): Hey! and Excuse me play a two-note chime (made with Web Audio, no recording) and a soft flash before the words (`"chime": true`); Please wait shows the words big; the rest fix a mix-up (Say it again, Don't understand, Not right, Not finished, Yes or no…).
   - **Time page** (just above ABC): What time?, What day?, Dad coming? / Mom coming?, How long?, What's next? say the question and then open an answer card (`"shows"` in `library.js`): a clock, today's date with the week, a countdown to the next visit (Settings → Visits, a date or every week, with a moon for each sleep), the wait timer, First / then. 🔊 Say it reads the answer in the board's voice: phrases recorded for it (`time_phrases()` in `tools/build.py`, e.g. "The time is", "My dad is coming on Saturday") with the ABC page's checked words in between (numbers, months, days of the month, o'clock: `TIME_WORDS`, made by `tools/abc-voices.py`). Every phrase was heard right by Whisper in Michael's voice.
   - **Staff tools** along the top of Settings: ⏳ wait timer (a shrinking pie, then a chime and "All done waiting!"; a small pie stays in the banner), ➡️ First, then (two pictures, "✓ … is done"), 🤔 Choose between (2–4 pictures big), 🧑‍🏫 Modelling (staff taps are said but not counted or logged; the banner turns purple; 👆 then a picture makes it glow silently, a hint; off after 10 quiet minutes; plus a word of the week with a gold star for 7 days), 🔒 Stay on this page (no arrows, swipes, page list or stickers; unlocks after 2 hours).
-  - **Made on the phone** (Settings → Photos and voices): new pictures (words, a photo or a board picture, a recording; with no recording the board's voice says them word by word if it has every word, else the phone's voice) on pages of their own ("My pictures", or named), placed just above ABC; ➕ spots in the chooser; **Go through this page** records a page in one sitting; **scenes** (a photo with spots to tap: a board picture or typed words) and **stories** (steps of a picture and a line, Back / Next; Next says the step). All in IndexedDB on the phone, and in backups (version 2; version 1 backups still restore). **Share → Talanoa** from the gallery (manifest `share_target`; `sw.js` keeps the photo in the `tt-share` cache and opens `?shared=1`).
+  - **Made on the phone** (Settings → Photos and voices): new pictures (words, a photo or a board picture, a recording; with no recording the board's voice says them word by word if it has every word, else the phone's voice) on pages of their own ("My pictures", or named), placed just above ABC; ➕ spots in the chooser; **Go through this page** records a page in one sitting; **scenes** (a photo with spots to tap: a board picture or typed words) and **stories** (steps of a picture and a line, Back / Next; Next says the step). All in IndexedDB on the phone, and in backups (version 2; version 1 backups still restore). **Share → Talanoa** from the gallery (manifest `share_target`; `sw.js` keeps the photo in the `tt3-share` cache and opens `?shared=1`).
   - **Backups:** "Last backup: …" with a nudge after 30 days; **Send a backup to another phone** through Android's share menu (as `.txt`: Chrome won't share `.json`; Restore takes both).
   - **Page links:** `?page=<page>` opens the board at that page (`?page=food`). Used by four **shortcuts** on the app's icon (I want, I feel, Ouch, Food: `SHORTCUT_PAGES` in `tools/build.py`, icons in `icons/page-*.png`), **QR stickers** (`print.html?stickers=1`, made with `lib/qrcode.js`, MIT; scanned in the app from the page list → 📷 with Chrome's barcode reader or `lib/jsQR.js`, Apache 2.0, both kept offline) and **NFC stickers** (Web NFC: write and, while Talanoa is open, read). The manifest's `launch_handler` lets a link turn the page of the open app. A link never says anything, and is ignored while staying on a page.
   - **Loud voice** (a compressor, +1.6 gain and a limiter on the Web Audio voice: about 6 dB louder on average, peaks under full scale), **Keep the screen on** (Screen Wake Lock, 5 minutes after each tap), **Scanning** (pictures light up in turn, a tap anywhere below the banner or Space/Enter from a switch chooses; rows first; say names; rests after 3 rounds), **today's list** (what was said, with times, 2 days, health words in red) and **Chime for health words** (Ouch, Body, Sick, Help).

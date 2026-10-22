@@ -1806,7 +1806,8 @@ var SCOPE = location.pathname.replace(/[^\/]*$/, '');            /* "/Talanoa/" 
 function linkKey(url){
   var u;
   try { u = new URL(url, location.href); } catch(e){ return null; }
-  if (u.origin !== location.origin || u.pathname.indexOf(SCOPE) !== 0) return null;   /* another site, or Talanoa 2 */
+  var home = u.origin === location.origin || u.origin === 'https://tcdeveloper27.github.io';   /* stickers printed before the 2026-10-22 move */
+  if (!home || u.pathname.indexOf(SCOPE) !== 0) return null;   /* another site, or Talanoa 2 */
   var k = u.searchParams.get('page');
   return k ? slug(k) : null;
 }

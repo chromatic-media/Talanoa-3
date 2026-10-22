@@ -1,7 +1,7 @@
 # Talanoa 3
 
-> **Being prepared (2026-10-18):** a copy of [Talanoa](https://github.com/tcdeveloper27/Talanoa) for another resident
-> (after [Talanoa 2](https://github.com/tcdeveloper27/Talanoa-2)). It still holds Brenton's board until the new board's words
+> **Being prepared (2026-10-18):** a copy of [Talanoa](https://github.com/chromatic-media/Talanoa) for another resident
+> (after [Talanoa 2](https://github.com/chromatic-media/Talanoa-2)). It still holds Brenton's board until the new board's words
 > arrive. The website isn't switched on yet. It saves everything under its own names (`tt3_…`, `tt3-voices`, `tt3-app-…`,
 > the `talanoa3` database), so it can be installed on the same phone as Talanoa or Talanoa 2 without mixing settings or
 > deleting their offline copies.
@@ -12,11 +12,11 @@ Made for the residents of Faleofaz.
 
 A tap-to-speak picture board (AAC). Tap a tile and it says the phrase out loud in a natural voice. (Brenton uses the original, Talanoa, on his Android phone.)
 
-**Open it:** https://tcdeveloper27.github.io/Talanoa-3/
+**Open it:** https://chromaticmedia.us/Talanoa-3/
 
 On an Android phone (or tablet), open the link in Chrome, then **⋮ → Add to Home screen** (or **Install app**). It opens full screen like an app, stays upright, and keeps working with no internet.
 
-**Staff guide:** https://tcdeveloper27.github.io/Talanoa-3/manual/ (printable PDF: [manual/Talanoa-Staff-Guide.pdf](manual/Talanoa-Staff-Guide.pdf)). Also in the app: hold ⚙ → **Staff guide**.
+**Staff guide:** https://chromaticmedia.us/Talanoa-3/manual/ (printable PDF: [manual/Talanoa-Staff-Guide.pdf](manual/Talanoa-Staff-Guide.pdf)). Also in the app: hold ⚙ → **Staff guide**.
 
 ## Using it
 
